@@ -1,8 +1,7 @@
 from mmcv import Config
 import mmcv
 from mmcv.runner import load_checkpoint
-from mmdet.apis import inference_detector, show_result_pyplot
-from mmdet.models import build_detector
+
 from mmdet.apis import set_random_seed
 
 # 先引入基配置文件
@@ -53,11 +52,15 @@ config.load_from = checkpoint
 config.work_dir = './tutorial_exps'
 
 # Set the device to be used for evaluation
-device='cuda:0'
+config.device='cuda'
 # Set seed thus the results are more reproducible
 config.seed = 0
 set_random_seed(0, deterministic=False)
 config.gpu_ids = range(1)
+
+config.data.samples_per_gpu = 4
+config.data.workers_per_gpu = 0
+
 
 # We can also use tensorboard to log the training process
 config.log_config.hooks = [
@@ -68,20 +71,4 @@ print(f'Config:\n{config.pretty_text}') #使用官方api将配置文件打印出
 
 
 
-from mmdet.datasets import build_dataset
-from mmdet.models import build_detector
-from mmdet.apis import train_detector
 
-
-# Build dataset
-datasets = [build_dataset(config.data.train)]
-
-# Build the detector
-model = build_detector(config.model)
-# Add an attribute for visualization convenience
-model.CLASSES = datasets[0].CLASSES
-
-# Create work_dir
-import os.path as osp
-mmcv.mkdir_or_exist(osp.abspath(config.work_dir))
-train_detector(model, datasets, config, distributed=False, validate=True)
