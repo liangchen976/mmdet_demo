@@ -53,6 +53,7 @@ class Registry:
         # 2.通过函数的方式进行调用
         self.__registry(obj)
 
+    # 实例化阶段 通过get 类名方法实现实例化对象
     def get(self, name):
         """
         通过字符串name获取对应的函数或者类。
