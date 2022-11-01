@@ -1,4 +1,6 @@
 from faster_rcnn import *
+
+# 配置文件设置
 from faster_rcnn.modify_config import config
 # Build dataset
 datasets = [build_dataset(config.data.train)]
