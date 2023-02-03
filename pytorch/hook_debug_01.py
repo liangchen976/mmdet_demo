@@ -6,7 +6,7 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 model = resnet34(pretrained=True)
 model = model.to(device)
 # 有36个卷积
-print(model)
+# print(model)
 
 
 class SaveOutput:
@@ -30,8 +30,10 @@ for layer in model.modules():
 
 from PIL import Image
 from torchvision import transforms as T
-dir = '../source/cat.png'
-image = Image.open(dir).convert('RGB')
+import requests
+url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
+image = Image.open(requests.get(url, stream=True).raw)
+# image = Image.open(dir).convert('RGB')
 transform = T.Compose([T.Resize((224, 224)), T.ToTensor()])
 X = transform(image).unsqueeze(dim=0).to(device)
 out = model(X)
